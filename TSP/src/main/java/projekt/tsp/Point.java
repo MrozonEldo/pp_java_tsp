@@ -6,7 +6,7 @@ package projekt.tsp;
 
 /**
  *
- * @author Mrozik
+ * @author Mrozik und Alem
  */
 // Point.java
 public class Point {

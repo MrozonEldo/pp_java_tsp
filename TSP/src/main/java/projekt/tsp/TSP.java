@@ -4,9 +4,9 @@
 
 package projekt.tsp;
 
-/**
+/*
  *
- * @author Mrozik
+ * @author Mrozik un Alem
  */
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -24,13 +24,16 @@ public class TSP {
         //cialo programu
         boolean isRunning = true;
         Scanner s = new Scanner(System.in);
+
+
+        //od komentuj ten który potrzebujesz
+        //Mrozon
+        //String path = "C:\\Users\\Mrozik\\Documents\\NetBeansProjects\\TSP\\";
+        //Alem
+        String path = "C:\\projects\\pp_java_tsp\\TSP\\";
         
-        //ALEM
-        //TUTAJ TRZEBA ZMIENIC TE FUSZERE XDDDDDD
-        String path = "C:\\Users\\Mrozik\\Documents\\NetBeansProjects\\TSP\\";
-        
-        int numCities = 10; // Przykładowa liczba miast
-        String fileName = "test",helpVal;
+        int numCities; // Przykładowa liczba miast
+        String fileName = "beyg", helpVal;
         
         List<Point> points = readCitiesFromFile(path+fileName+".txt");
         
@@ -41,7 +44,6 @@ public class TSP {
             switch(wyborAkcji){
                 case "1" -> {
                     System.out.println("Wpisz nazwe docelowego pliku:");
-                    //numCities = s.nextInt();
                     fileName = s.nextLine();
                     System.out.println("Wpisz liczbe miast:");
                     helpVal = s.nextLine();
@@ -49,21 +51,18 @@ public class TSP {
                     generateCitiesFile(numCities, fileName);
                     points = readCitiesFromFile(path+fileName+".txt");
                     System.out.println("Plik zostal wygenerowany!");
-                    break;
                 }
                 case "2" ->{
                     System.out.println("Wpisz nazwe pliku:");
                     fileName = s.nextLine();
                     points = readCitiesFromFile(path+fileName+".txt");
                     System.out.println("Plik zostal wczytany!");
-                    break;
                 }
                 case "3" -> {
                     System.out.println("Obecnie wczytana instancja:");
                     for (Point point : points) {
                         System.out.println(point.getId()+".("+point.getX()+","+point.getY()+")");
                         }
-                    break;
                 }
                 case "4" -> {
                     List<Point> bestRoute = TSPGreedy.findBestRoute(points);
@@ -75,25 +74,14 @@ public class TSP {
                         System.out.println(counter+".  "+point.getId()+".("+point.getX()+","+point.getY()+")");
                     }
                     System.out.println("Długość trasy: " + Math.round(totalDistance*100.0)/100.0);
-                    //double roundOff = Math.round(a * 100.0) / 100.0;
                 }
                 case "6" -> {
                     System.out.println("Koncze prace programu, do zobaczenia!");
                     isRunning = false;
-                    break;
                 }
-                default -> {System.out.println("Blad, sprobuj jeszcze raz."); break;}
+                default -> {System.out.println("Blad, sprobuj jeszcze raz.");}
             }
         }
-        
-            //generateCitiesFile(numCities, fileName);
-            //List<Point> points = readCitiesFromFile(fileName);
-
-            //List<Point> bestRoute = TSPGreedy.findBestRoute(points);
-            //double totalDistance = calculateTotalDistance(bestRoute);
-
-            //System.out.println("Najlepsza trasa: " + bestRoute);
-            //System.out.println("Długość trasy: " + totalDistance);
     }
 
     //funkcje
@@ -163,6 +151,7 @@ public class TSP {
         2. Wczytaj instancje z pliku.
         3. Pokaz instancje.
         4. TSP - metoda zachlanna.
+        5. Mrufki - TODO.
         6. Wyjdz z programu
         """);
     }

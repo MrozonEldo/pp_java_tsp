@@ -6,7 +6,7 @@ package projekt.tsp;
 
 /**
  *
- * @author Mrozik
+ * @author Mrozik und Alem
  */
 // TSPGreedy.java
 import java.util.ArrayList;
