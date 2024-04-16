@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import static projekt.tsp.TSP_ACS.antColonySystem;
+
 public class TSP {
 
     public static void main(String[] args) throws IOException {
@@ -31,12 +33,12 @@ public class TSP {
         //String path = "C:\\Users\\Mrozik\\Documents\\NetBeansProjects\\TSP\\";
         //Alem
         String path = "C:\\projects\\pp_java_tsp\\TSP\\";
-        
+
         int numCities; // Przykładowa liczba miast
-        String fileName = "beyg", helpVal;
-        
+        String fileName = "test", helpVal;
+
         List<Point> points = readCitiesFromFile(path+fileName+".txt");
-        
+
 
         while(isRunning){
             mainMenu();
@@ -74,6 +76,18 @@ public class TSP {
                         System.out.println(counter+".  "+point.getId()+".("+point.getX()+","+point.getY()+")");
                     }
                     System.out.println("Długość trasy: " + Math.round(totalDistance*100.0)/100.0);
+                }
+                case "5" -> {
+                    System.out.println("Running Ant Colony System...");
+                    List<Point> bestRoute = antColonySystem(points);
+                    double totalDistance = calculateTotalDistance(bestRoute);
+                    System.out.println("Best route found by Ant Colony System:");
+                    int counter = 0;
+                    for(Point point : bestRoute){
+                        counter++;
+                        System.out.println(counter+".  "+point.getId()+".("+point.getX()+","+point.getY()+")");
+                    }
+                    System.out.println("Route length: " + Math.round(totalDistance*100.0)/100.0);
                 }
                 case "6" -> {
                     System.out.println("Koncze prace programu, do zobaczenia!");
@@ -142,7 +156,7 @@ public class TSP {
         totalDistance += route.get(route.size() - 1).distanceTo(route.get(0));
         return totalDistance;
     }
-    
+
     static void mainMenu(){
         System.out.println("""
         \nWitaj w naszym programie!
@@ -151,7 +165,7 @@ public class TSP {
         2. Wczytaj instancje z pliku.
         3. Pokaz instancje.
         4. TSP - metoda zachlanna.
-        5. Mrufki - TODO.
+        5. Mrufki.
         6. Wyjdz z programu
         """);
     }
