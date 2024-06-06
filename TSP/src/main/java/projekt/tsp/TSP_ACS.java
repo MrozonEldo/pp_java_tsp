@@ -2,13 +2,14 @@ package projekt.tsp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static projekt.tsp.TSP.calculateTotalDistance;
 
 public class TSP_ACS {
     public static List<Point> antColonySystem(List<Point> points) {
         final int numAnts = points.size();
-        final int maxIterations = 1000;
+        final int maxIterations = 50; // 50 dla TSP1000
         final double alpha = 1.0;
         final double beta = 2.0;
         final double evaporationRate = 0.5;
@@ -16,45 +17,55 @@ public class TSP_ACS {
         final double Q = 100.0;
         double[][] pheromones = new double[numAnts][numAnts];
         double[][] distances = new double[numAnts][numAnts];
+        Random rand = new Random(42); // Stałe ziarno dla powtarzalności
 
-        // feromowy mrufek
+        // Inicjalizacja feromonów na podstawie zachłannej trasy
+        List<Point> greedyRoute = greedyAlgorithm(points);
+        double greedyDistance = calculateTotalDistance(greedyRoute);
         for (int i = 0; i < numAnts; i++) {
             for (int j = 0; j < numAnts; j++) {
-                pheromones[i][j] = initialPheromone;
+                pheromones[i][j] = Q / greedyDistance;
             }
         }
 
-        // dystans
+        // Dystans
         for (int i = 0; i < numAnts; i++) {
             for (int j = 0; j < numAnts; j++) {
                 distances[i][j] = points.get(i).distanceTo(points.get(j));
             }
         }
 
-        //inicjacja
+        // Inicjacja
         List<Point> bestRoute = new ArrayList<>();
         double bestDistance = Double.MAX_VALUE;
+        long startTime = System.currentTimeMillis();
 
-        // gluwna pentla
+        // Główna pętla
         for (int iteration = 0; iteration < maxIterations; iteration++) {
-            List<Point>[] antRoutes = new List[numAnts]; // Ant routes
-            double[] antDistances = new double[numAnts]; // Ant distances
+            List<Point>[] antRoutes = new List[numAnts];
+            double[] antDistances = new double[numAnts];
 
-            // dzialanie
+
             for (int ant = 0; ant < numAnts; ant++) {
-                antRoutes[ant] = constructSolution(ant, points, pheromones, distances, alpha, beta);
+                antRoutes[ant] = constructSolution(ant, points, pheromones, distances, alpha, beta, rand);
                 antDistances[ant] = calculateTotalDistance(antRoutes[ant]);
             }
 
-            // po kazdym punktcie update feromonow
             updatePheromones(pheromones, antRoutes, antDistances, Q, evaporationRate);
 
-            // najlepsza sciezka
             for (int ant = 0; ant < numAnts; ant++) {
                 if (antDistances[ant] < bestDistance) {
                     bestDistance = antDistances[ant];
                     bestRoute = new ArrayList<>(antRoutes[ant]);
                 }
+            }
+
+            // Logowanie najlepszej odległości w każdej iteracji
+            System.out.println("Iteration " + iteration + ": Best Distance = " + bestDistance);
+
+            long timeNow = System.currentTimeMillis();
+            if ((timeNow - startTime) > 300000) { // 5 minut
+                break;
             }
         }
 
@@ -62,17 +73,16 @@ public class TSP_ACS {
     }
 
     private static List<Point> constructSolution(int ant, List<Point> points, double[][] pheromones,
-                                                 double[][] distances, double alpha, double beta) {
+                                                 double[][] distances, double alpha, double beta, Random rand) {
         int numCities = points.size();
         List<Point> route = new ArrayList<>();
         boolean[] visited = new boolean[numCities];
-        int currentCity = ant % numCities; // kazda mrufka start w innym miejscu
+        int currentCity = ant % numCities;
 
         for (int step = 0; step < numCities; step++) {
             route.add(points.get(currentCity));
             visited[currentCity] = true;
 
-            // obliczanie dystansu dla miast
             double[] probabilities = new double[numCities];
             double totalProbability = 0.0;
             for (int nextCity = 0; nextCity < numCities; nextCity++) {
@@ -83,13 +93,12 @@ public class TSP_ACS {
                 }
             }
 
-            // wybor <0,1>
-            double rand = Math.random() * totalProbability;
+            double r = rand.nextDouble() * totalProbability;
             double sum = 0.0;
             for (int nextCity = 0; nextCity < numCities; nextCity++) {
                 if (!visited[nextCity]) {
                     sum += probabilities[nextCity];
-                    if (rand <= sum) {
+                    if (r <= sum) {
                         currentCity = nextCity;
                         break;
                     }
@@ -119,5 +128,29 @@ public class TSP_ACS {
                 pheromones[city2][city1] += Q / distance;
             }
         }
+    }
+
+    private static List<Point> greedyAlgorithm(List<Point> points) {
+        List<Point> route = new ArrayList<>();
+        boolean[] visited = new boolean[points.size()];
+        Point current = points.get(0);
+        route.add(current);
+        visited[0] = true;
+
+        for (int i = 1; i < points.size(); i++) {
+            Point nearest = null;
+            double nearestDistance = Double.MAX_VALUE;
+            for (int j = 0; j < points.size(); j++) {
+                if (!visited[j] && current.distanceTo(points.get(j)) < nearestDistance) {
+                    nearest = points.get(j);
+                    nearestDistance = current.distanceTo(nearest);
+                }
+            }
+            route.add(nearest);
+            visited[points.indexOf(nearest)] = true;
+            current = nearest;
+        }
+
+        return route;
     }
 }

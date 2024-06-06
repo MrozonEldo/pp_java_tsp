@@ -22,7 +22,7 @@ import static projekt.tsp.TSP_ACS.antColonySystem;
 
 public class TSP {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         //cialo programu
         boolean isRunning = true;
         Scanner s = new Scanner(System.in);
