@@ -9,7 +9,7 @@ import static projekt.tsp.TSP.calculateTotalDistance;
 public class TSP_ACS {
     public static List<Point> antColonySystem(List<Point> points) {
         final int numAnts = points.size();
-        final int maxIterations = 50; //50 dla TSP1000
+        final int maxIterations = 1000; //50 dla TSP1000
         final double alpha = 1.0;
         final double beta = 2.0;
         final double evaporationRate = 0.5;

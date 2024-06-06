@@ -30,9 +30,9 @@ public class TSP {
 
         //od komentuj ten który potrzebujesz
         //Mrozon
-        //String path = "C:\\Users\\Mrozik\\Documents\\NetBeansProjects\\TSP\\";
+        String path = "C:\\Users\\Mrozik\\Documents\\GitHub\\pp_java_tsp\\TSP\\";
         //Alem
-        String path = "C:\\projects\\pp_java_tsp\\TSP\\";
+        //String path = "C:\\projects\\pp_java_tsp\\TSP\\";
 
         int numCities; // Przykładowa liczba miast
         String fileName = "test", helpVal;
