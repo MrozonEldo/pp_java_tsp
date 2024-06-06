@@ -9,12 +9,13 @@ import static projekt.tsp.TSP.calculateTotalDistance;
 public class TSP_ACS {
     public static List<Point> antColonySystem(List<Point> points) {
         final int numAnts = points.size();
-        final int maxIterations = 50; // 50 dla TSP1000
+        final int maxIterations = 50; //50 dla TSP1000
         final double alpha = 1.0;
         final double beta = 2.0;
         final double evaporationRate = 0.5;
         final double initialPheromone = 1.0;
         final double Q = 100.0;
+        ArrayList list = new ArrayList<Double>();
         double[][] pheromones = new double[numAnts][numAnts];
         double[][] distances = new double[numAnts][numAnts];
         Random rand = new Random(42); // Stałe ziarno dla powtarzalności
@@ -59,6 +60,28 @@ public class TSP_ACS {
                     bestRoute = new ArrayList<>(antRoutes[ant]);
                 }
             }
+
+
+            if (list.size() == 3){
+                int counter = 0;
+                for(Point point : bestRoute){
+                    counter++;
+                    System.out.println(counter+".  "+point.getId()+".("+point.getX()+","+point.getY()+")");
+                }
+            }
+
+
+            if (list.isEmpty()) {
+                list.add(bestDistance);
+            }
+            else if (iteration>0 && bestDistance == (double)list.get(0))
+            {
+                list.add(bestDistance);
+            }
+            else {
+                list.clear();
+            }
+
 
             // Logowanie najlepszej odległości w każdej iteracji
             System.out.println("Iteration " + iteration + ": Best Distance = " + bestDistance);
